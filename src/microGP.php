@@ -38,22 +38,29 @@ class microGP {
     , "CURLOPT_TIMEOUT"        => 61
   ];
 
+  /**
+   * Additional curl options for POST request
+   *  - set curl to use POST request = true
+   *  - POST data = ""
+   */
   protected static $post_options = [
     "CURLOPT_POST"         => true
     , "CURLOPT_POSTFIELDS" => ""
   ];
 
+  /**
+   * Basic request info which returns with request body
+   *  - Response code
+   *  - Request data size
+   *  - Request time
+   *  - Request headers 
+   */
   protected static $request_info = [
       'code'       => 'CURLINFO_HTTP_CODE'
       , 'filesize' => 'CURLINFO_REQUEST_SIZE'
       , 'time'     => 'CURLINFO_TOTAL_TIME'
       , 'headers'  => 'CURLINFO_HEADER_OUT'
     ];
-  
-  /**
-   * Curl object
-   */
-  protected static $curl = NULL;
 
   /**
    * Request method GET
@@ -123,7 +130,7 @@ class microGP {
   }
 
   /**
-   * Get curl exec information: http code, filesize, request time, request headers
+   * Get curl exec information
    * @param  $curl  object Curl object, after receive response
    * @return        array  Return small info about request/response
    */
