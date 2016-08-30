@@ -1,7 +1,5 @@
 <?php
 
-namespace microGP;
-
 /**
  * Micro wrapper for curl lib, can make GET/POST requests
  * 
