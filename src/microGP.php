@@ -42,6 +42,13 @@ class microGP {
     "CURLOPT_POST"         => true
     , "CURLOPT_POSTFIELDS" => ""
   ];
+
+  protected static $request_info = [
+      'code'       => 'CURLINFO_HTTP_CODE'
+      , 'filesize' => 'CURLINFO_REQUEST_SIZE'
+      , 'time'     => 'CURLINFO_TOTAL_TIME'
+      , 'headers'  => 'CURLINFO_HEADER_OUT'
+    ];
   
   /**
    * Curl object
@@ -65,7 +72,7 @@ class microGP {
     $headers = array_merge(self::$get_headers, $headers);
     $params  = array_merge(self::$curl_options, $params);
 
-    self::request_send($url, $headers, $params);
+    return self::request_send($url, $headers, $params);
   }
 
   /**
@@ -85,7 +92,7 @@ class microGP {
     $headers = array_merge(self::$get_headers, $headers);
     $headers = array_merge(self::$curl_options, self::$post_options, $params);
 
-    self::request_send($url, $headers, $params);
+    return self::request_send($url, $headers, $params);
   }
 
   /**
@@ -97,6 +104,33 @@ class microGP {
    * @return         object Response object: response, response headers, request headers
    */
   protected static function request_send($url, $headers, $params) {
-     
+    $curl = curl_init($url);
+
+    //Set curl options
+    foreach($params as $param => $value) {
+      curl_setopt($curl, constant($param), $value);
+    }
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+    $response = curl_exec($curl);
+    $info = self::get_info($curl);
+
+    curl_close($curl);
+    return ['body' => $response, 'info' => $info, 'code' => $info['code']];
+  }
+
+  /**
+   * Get curl exec information: http code, filesize, request time, request headers
+   * @param  $curl  object Curl object, after receive response
+   * @return        array  Return small info about request/response
+   */
+  protected static function get_info($curl) {
+    $info = [];
+    //Collect info
+    foreach(self::$request_info as $key => $option) {
+      $info[$key] = curl_getinfo($curl, constant($option));
+    }
+
+    return $info;
   }
 }
