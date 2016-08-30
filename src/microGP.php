@@ -89,8 +89,11 @@ class microGP {
       return false;
     }
 
+    self::$post_options['CURLOPT_POSTFIELDS'] = $data;
+
     $headers = array_merge(self::$get_headers, $headers);
-    $headers = array_merge(self::$curl_options, self::$post_options, $params);
+    $params  = array_merge(self::$curl_options, self::$post_options, $params);
+    // print_r($headers);
 
     return self::request_send($url, $headers, $params);
   }
