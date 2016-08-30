@@ -100,7 +100,6 @@ class microGP {
 
     $headers = array_merge(self::$get_headers, $headers);
     $params  = array_merge(self::$curl_options, self::$post_options, $params);
-    // print_r($headers);
 
     return self::request_send($url, $headers, $params);
   }
